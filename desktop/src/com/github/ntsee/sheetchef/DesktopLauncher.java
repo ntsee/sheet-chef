@@ -9,6 +9,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setTitle("Sheet Chef");
 		config.setWindowedMode(SheetChefView.WIDTH, SheetChefView.HEIGHT);
+		config.setWindowSizeLimits(SheetChefView.WIDTH, SheetChefView.HEIGHT, -1, -1);
 		new Lwjgl3Application(new SheetChefApp(), config);
 	}
 }
