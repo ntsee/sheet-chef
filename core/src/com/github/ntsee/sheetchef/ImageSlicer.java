@@ -128,21 +128,29 @@ public class ImageSlicer implements Disposable {
         for (int i = 0; i < this.boxes.size(); i++) {
             String fileName = String.format("%d.%s", i, this.exportFormat.name().toLowerCase());
             FileHandle outputHandle = this.exportDirectory.child(fileName);
-
-            Pixmap pixmap = this.createSubImage(this.boxes.get(i));
-            PixmapIO.writePNG(outputHandle, pixmap);
-            pixmap.dispose();
-
-            BufferedImage image = ImageIO.read(outputHandle.file());
-            ImageIO.write(image, this.exportFormat.name(), outputHandle.file());
+            BufferedImage image = this.createSubImage(this.boxes.get(i));
+            if (!ImageIO.write(image, this.exportFormat.name(), outputHandle.file())) {
+                throw new IOException("Failed to save " + fileName);
+            }
         }
     }
 
-    private Pixmap createSubImage(Rectangle box) {
-        Pixmap pixmap = new Pixmap((int)box.width, (int)box.height, Pixmap.Format.RGB888);
-        pixmap.drawPixmap(this.inputImage, 0, 0, (int)box.x, (int)box.y,
-                (int)box.width, (int)box.height);
-        return pixmap;
+    private BufferedImage createSubImage(Rectangle box) {
+        BufferedImage image = new BufferedImage((int)box.width, (int)box.height, BufferedImage.TYPE_INT_RGB);
+        for (int y=0; y<box.height; y++) {
+            for(int x=0; x<box.width; x++) {
+                int i = (int)box.x + x;
+                int j = (int)box.y + y;
+                int pixel = this.inputImage.getPixel(i, j);
+                if (this.inputImage.getFormat() == Pixmap.Format.RGBA8888) {
+                    pixel = pixel >> 8;
+                }
+
+                image.setRGB(x, y, pixel);
+            }
+        }
+
+        return image;
     }
 
     @Override
