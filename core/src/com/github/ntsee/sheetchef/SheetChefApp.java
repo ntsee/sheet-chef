@@ -12,7 +12,7 @@ public class SheetChefApp extends ApplicationAdapter implements SheetChefView.Li
 
 	private ImageSlicer slicer;
 	private SheetChefView view;
-	
+
 	@Override
 	public void create () {
 		this.slicer = new ImageSlicer();
@@ -37,9 +37,11 @@ public class SheetChefApp extends ApplicationAdapter implements SheetChefView.Li
 	@Override
 	public void onBackgroundColorChanged(Color color) {
 		this.slicer.setBackgroundColor(color);
-		Texture texture = SheetChefView.createImageOverlay(this.slicer.getInputImage(),
-				this.slicer.getBoxes());
-		this.view.showInputImage(texture);
+		if (this.slicer.getInputImage() != null) {
+			Texture texture = SheetChefView.createImageOverlay(this.slicer.getInputImage(),
+					this.slicer.getBoxes());
+			this.view.showInputImage(texture);
+		}
 	}
 
 	@Override
