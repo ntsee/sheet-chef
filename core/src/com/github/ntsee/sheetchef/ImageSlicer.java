@@ -141,11 +141,7 @@ public class ImageSlicer implements Disposable {
             for(int x=0; x<box.width; x++) {
                 int i = (int)box.x + x;
                 int j = (int)box.y + y;
-                int pixel = this.inputImage.getPixel(i, j);
-                if (this.inputImage.getFormat() == Pixmap.Format.RGBA8888) {
-                    pixel = pixel >> 8;
-                }
-
+                int pixel = this.inputImage.getPixel(i, j) >> 8;
                 image.setRGB(x, y, pixel);
             }
         }
